@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>KLSE Simple Tools</title>
+<style>
+body{
+    font-family:Arial, sans-serif;
+    padding:20px;
+    max-width:460px;
+    margin:auto;
+    color:#222;
+}
+h2{margin-bottom:10px;}
+h3{margin-top:25px;border-left:4px solid #555;padding-left:8px;}
+label{font-size:14px;margin-top:6px;display:block;color:#444;}
+input{
+    width:100%;
+    padding:8px;
+    margin-top:4px;
+    border:1px solid #bbb;
+    border-radius:6px;
+    font-size:15px;
+}
+button{
+    width:100%;
+    padding:10px;
+    margin-top:10px;
+    background:#e9e9e9;
+    border:1px solid #bbb;
+    border-radius:6px;
+    font-size:15px;
+    cursor:pointer;
+}
+button:hover{background:#dcdcdc;}
+.result{
+    background:#f5f5f5;
+    border:1px solid #ddd;
+    padding:10px;
+    margin-top:12px;
+    border-radius:6px;
+    font-size:14px;
+    white-space:pre-line;
+}
+</style>
+</head>
+<body>
+
+<h2>KLSE Tools</h2>
+
+<!-- 手續費 -->
+<h3>手續費計算</h3>
+<label>股價 (RM)</label>
+<input type="number" step="0.001" id="price">
+
+<label>股數</label>
+<input type="number" id="qty">
+
+<button onclick="calcFee()">計算手續費</button>
+<div id="feeOut" class="result"></div>
+
+<!-- 換手率 -->
+<h3>換手率</h3>
+<label>成交量 (lot 或 35M / 450K)</label>
+<input type="text" id="vol">
+
+<label>股本數 (10.79B / 5.8B)</label>
+<input type="text" id="shares">
+
+<button onclick="calcTurn()">計算換手率</button>
+<div id="turnOut" class="result"></div>
+
+<!-- RR -->
+<h3>止盈 / 止損 / RR</h3>
+<label>預計買入價 (RM)</label>
+<input type="number" step="0.001" id="entry">
+
+<button onclick="calcRR()">計算 RR</button>
+<div id="rrOut" class="result"></div>
+
+<script>
+function parseNum(v){
+    if(!v) return NaN;
+    v = v.toString().trim().toUpperCase().replace(/,/g,"");
+    let num = parseFloat(v);
+    if(isNaN(num)) return NaN;
+    if(v.endsWith("B")) return num * 1e9;
+    if(v.endsWith("M")) return num * 1e6;
+    if(v.endsWith("K")) return num * 1e3;
+    return num;
+}
+
+function formatNum(n){return n.toLocaleString('en-US');}
+
+function fee(a){
+    let p=a>=3000?a*0.0042:12,
+        c=a*0.0003,
+        s=Math.ceil(a/1000)*1;
+    return p+c+s;
+}
+
+function calcFee(){
+    let price=parseFloat(document.getElementById("price").value);
+    let qty=parseInt(document.getElementById("qty").value);
+    if(!price||!qty)return;
+    let amt=price*qty;
+    let total=fee(amt);
+    document.getElementById("feeOut").innerText=
+`成交額: RM ${amt.toFixed(2)}
+手續費總額: RM ${total.toFixed(2)}`;
+}
+
+function calcTurn(){
+    let v=parseNum(document.getElementById("vol").value);
+    let s=parseNum(document.getElementById("shares").value);
+    if(!v||!s)return;
+
+    let sharesVol = v * 100;
+    let t = (sharesVol/s*100);
+
+    let display = t >= 1 ? t.toFixed(2) + "%" :
+                  t >= 0.1 ? t.toFixed(3) + "%" :
+                  t >= 0.01 ? t.toFixed(4) + "%" :
+                  t >= 0.001 ? t.toFixed(5) + "%" :
+                  t.toFixed(6) + "%";
+
+    document.getElementById("turnOut").innerText =
+`成交量(lot): ${formatNum(v)}
+成交量(股): ${formatNum(sharesVol)}
+股本數: ${formatNum(s)}
+換手率: ${display}`;
+}
+
+function calcRR(){
+    let e=parseFloat(document.getElementById("entry").value);
+    if(!e)return;
+    let sl=e*0.95,tp1=e*1.08,tp2=e*1.12;
+    let risk=0.05,rew1=0.08,rew2=0.12;
+    document.getElementById("rrOut").innerText=
+`止損價(5%): RM ${sl.toFixed(4)}
+止盈8%: RM ${tp1.toFixed(4)} (RR=${(rew1/risk).toFixed(2)})
+止盈12%: RM ${tp2.toFixed(4)} (RR=${(rew2/risk).toFixed(2)})`;
+}
+</script>
+</body>
+</html>
