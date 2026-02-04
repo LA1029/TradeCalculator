@@ -1,146 +1,1216 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh">
 <head>
 <meta charset="UTF-8">
-<title>KLSE Simple Tools</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>交易训练模式 | KLSE + Moomoo 交易工具</title>
 <style>
-body{
-    font-family:Arial, sans-serif;
-    padding:20px;
-    max-width:460px;
-    margin:auto;
-    color:#222;
+:root {
+  --primary: #4361ee;
+  --secondary: #3a0ca3;
+  --accent: #4cc9f0;
+  --success: #2ec4b6;
+  --warning: #ff9f1c;
+  --danger: #e63946;
+  --light: #f8f9fa;
+  --dark: #212529;
+  --gray: #6c757d;
+  --border-radius: 12px;
+  --box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  --transition: all 0.3s ease;
 }
-h2{margin-bottom:10px;}
-h3{margin-top:25px;border-left:4px solid #555;padding-left:8px;}
-label{font-size:14px;margin-top:6px;display:block;color:#444;}
-input{
-    width:100%;
-    padding:8px;
-    margin-top:4px;
-    border:1px solid #bbb;
-    border-radius:6px;
-    font-size:15px;
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
-button{
-    width:100%;
-    padding:10px;
-    margin-top:10px;
-    background:#e9e9e9;
-    border:1px solid #bbb;
-    border-radius:6px;
-    font-size:15px;
-    cursor:pointer;
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background-color: #f5f7ff;
+  color: var(--dark);
+  line-height: 1.6;
+  padding: 20px;
+  min-height: 100vh;
 }
-button:hover{background:#dcdcdc;}
-.result{
-    background:#f5f5f5;
-    border:1px solid #ddd;
-    padding:10px;
-    margin-top:12px;
-    border-radius:6px;
-    font-size:14px;
-    white-space:pre-line;
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+@media (min-width: 1024px) {
+  .container {
+    grid-template-columns: 2fr 3fr;
+  }
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 24px;
+  grid-column: 1 / -1;
+  position: relative;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(67, 97, 238, 0.1), rgba(58, 12, 163, 0.05));
+  border-radius: var(--border-radius);
+}
+
+.header h1 {
+  font-size: 2.4rem;
+  color: var(--secondary);
+  margin-bottom: 8px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
+}
+
+.header .mode-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--danger), #ff6b6b);
+  color: white;
+  padding: 8px 20px;
+  border-radius: 30px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-top: 10px;
+  box-shadow: 0 4px 12px rgba(231, 57, 70, 0.3);
+}
+
+.header p {
+  color: var(--gray);
+  font-size: 1.1rem;
+  margin-top: 10px;
+}
+
+.card {
+  background: white;
+  border-radius: var(--border-radius);
+  padding: 24px;
+  box-shadow: var(--box-shadow);
+  transition: var(--transition);
+  height: fit-content;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
+.card h2 {
+  font-size: 1.4rem;
+  color: var(--secondary);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 2px solid #f0f3ff;
+  padding-bottom: 12px;
+}
+
+.card h2 i {
+  color: var(--primary);
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.section-title h3 {
+  font-size: 1.2rem;
+  color: var(--primary);
+  border-left: 4px solid var(--accent);
+  padding-left: 12px;
+}
+
+/* 左侧规则区域样式 */
+.rules-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.principle-card {
+  border-left: 6px solid;
+  padding-left: 16px;
+  margin-bottom: 20px;
+}
+
+.principle-card.principle-1 {
+  border-left-color: var(--danger);
+}
+
+.principle-card.principle-2 {
+  border-left-color: var(--warning);
+}
+
+.principle-card.principle-3 {
+  border-left-color: var(--success);
+}
+
+.principle-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.principle-number {
+  background-color: var(--primary);
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin-right: 12px;
+  font-size: 1.1rem;
+}
+
+.principle-title {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: var(--dark);
+}
+
+.principle-content {
+  padding-left: 44px;
+}
+
+.principle-content ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.principle-content li {
+  margin-bottom: 10px;
+  padding-left: 24px;
+  position: relative;
+}
+
+.principle-content li:before {
+  content: "•";
+  color: var(--primary);
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+}
+
+.quote-box {
+  background: #f8f9ff;
+  border-radius: 10px;
+  padding: 16px;
+  margin: 16px 0;
+  border-left: 4px solid var(--accent);
+  font-style: italic;
+}
+
+.account-structure {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+@media (max-width: 768px) {
+  .account-structure {
+    grid-template-columns: 1fr;
+  }
+}
+
+.account-type {
+  background: #f8f9ff;
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.account-type h4 {
+  color: var(--primary);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.account-type ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.account-type li {
+  padding: 6px 0;
+  border-bottom: 1px dashed #e1e5ee;
+}
+
+.account-type li:last-child {
+  border-bottom: none;
+}
+
+/* 右侧工具区域样式 */
+.tools-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* 征兆卡片样式 */
+.sign-card {
+  background: #fff9f2;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 16px;
+  border-left: 4px solid var(--warning);
+}
+
+.sign-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.sign-number {
+  background-color: var(--warning);
+  color: white;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin-right: 12px;
+  font-size: 1rem;
+}
+
+.sign-title {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--dark);
+}
+
+.sign-content {
+  padding-left: 40px;
+}
+
+.sign-content ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.sign-content li {
+  margin-bottom: 8px;
+  padding-left: 20px;
+  position: relative;
+}
+
+.sign-content li:before {
+  content: "→";
+  color: var(--warning);
+  position: absolute;
+  left: 0;
+}
+
+.rr-optimization {
+  background: #f0f9ff;
+  border-radius: 10px;
+  padding: 16px;
+  margin-top: 20px;
+  border-left: 4px solid var(--accent);
+}
+
+.rr-optimization h4 {
+  color: var(--primary);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 表单样式 */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+@media (max-width: 480px) {
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
+
+label {
+  font-weight: 600;
+  color: var(--dark);
+  font-size: 0.95rem;
+}
+
+.input-group {
+  position: relative;
+}
+
+input, select {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid #e1e5ee;
+  border-radius: 10px;
+  font-size: 16px;
+  transition: var(--transition);
+  background-color: #fafbfe;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+}
+
+.currency {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gray);
+  font-weight: 600;
+}
+
+.btn {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
+  border: none;
+  padding: 16px 24px;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  width: 100%;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn:hover {
+  background: linear-gradient(135deg, var(--secondary), var(--primary));
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(67, 97, 238, 0.25);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.result-box {
+  background: linear-gradient(135deg, #f8f9ff, #f0f3ff);
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 24px;
+  border-left: 4px solid var(--primary);
+  font-family: 'Courier New', monospace;
+  line-height: 1.8;
+  white-space: pre-line;
+  font-size: 15px;
+}
+
+.result-title {
+  font-weight: 700;
+  color: var(--secondary);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.1rem;
+}
+
+.result-line {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+  border-bottom: 1px dashed #e1e5ee;
+}
+
+.result-line:last-child {
+  border-bottom: none;
+  font-weight: 700;
+  color: var(--primary);
+  padding-top: 8px;
+  margin-top: 8px;
+  border-top: 2px solid var(--accent);
+}
+
+.highlight {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.note {
+  font-size: 0.85rem;
+  color: var(--gray);
+  margin-top: 8px;
+  font-style: italic;
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-left: 8px;
+}
+
+.badge-cold {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.badge-normal {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.badge-warm {
+  background-color: #fff3e0;
+  color: #ef6c00;
+}
+
+.badge-hot {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.badge-very-hot {
+  background-color: #fce4ec;
+  color: #ad1457;
+}
+
+.footer {
+  text-align: center;
+  margin-top: 30px;
+  color: var(--gray);
+  font-size: 0.9rem;
+  grid-column: 1 / -1;
+  padding-top: 20px;
+  border-top: 1px solid #e1e5ee;
+}
+
+.toggle-container {
+  display: flex;
+  background: #f0f3ff;
+  border-radius: 10px;
+  padding: 4px;
+  margin-bottom: 20px;
+}
+
+.toggle-btn {
+  flex: 1;
+  padding: 10px;
+  text-align: center;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: var(--transition);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.toggle-btn.active {
+  background: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+  color: var(--primary);
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  margin-left: 5px;
+}
+
+.tooltip .tooltip-text {
+  visibility: hidden;
+  width: 220px;
+  background-color: var(--dark);
+  color: white;
+  text-align: center;
+  border-radius: 6px;
+  padding: 10px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.85rem;
+  font-weight: normal;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+.tooltip .tooltip-text::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: var(--dark) transparent transparent transparent;
+}
+
+/* 海油优化RR样式 */
+.rr-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.rr-table th {
+  background-color: #f0f3ff;
+  padding: 12px;
+  text-align: center;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.rr-table td {
+  padding: 12px;
+  text-align: center;
+  border-bottom: 1px solid #e1e5ee;
+}
+
+.rr-table tr:last-child td {
+  border-bottom: none;
+}
+
+.rr-table .rr-good {
+  background-color: rgba(46, 196, 182, 0.1);
+  color: var(--success);
+  font-weight: 600;
+}
+
+.rr-table .rr-bad {
+  background-color: rgba(231, 57, 70, 0.1);
+  color: var(--danger);
+  font-weight: 600;
+}
+
+.rr-visual {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 40px;
+  background: #f0f3ff;
+  border-radius: 10px;
+  padding: 0 10px;
+  margin-top: 15px;
+  position: relative;
+}
+
+.rr-visual-bar {
+  height: 20px;
+  border-radius: 10px;
+  transition: width 0.5s ease;
+}
+
+.rr-visual-risk {
+  background: linear-gradient(90deg, #ff9f1c, #ff6b6b);
+}
+
+.rr-visual-reward {
+  background: linear-gradient(90deg, #4cc9f0, #4361ee);
+}
+
+.rr-visual-label {
+  position: absolute;
+  top: -25px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.rr-visual-label.risk {
+  color: var(--warning);
+  left: 10px;
+}
+
+.rr-visual-label.reward {
+  color: var(--primary);
+  right: 10px;
 }
 </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-
-<h2>KLSE Tools</h2>
-
-<!-- 手續費 -->
-<h3>手續費計算</h3>
-<label>股價 (RM)</label>
-<input type="number" step="0.001" id="price">
-
-<label>股數</label>
-<input type="number" id="qty">
-
-<button onclick="calcFee()">計算手續費</button>
-<div id="feeOut" class="result"></div>
-
-<!-- 換手率 -->
-<h3>換手率</h3>
-<label>成交量 (lot 或 35M / 450K)</label>
-<input type="text" id="vol">
-
-<label>股本數 (10.79B / 5.8B)</label>
-<input type="text" id="shares">
-
-<button onclick="calcTurn()">計算換手率</button>
-<div id="turnOut" class="result"></div>
-
-<!-- RR -->
-<h3>止盈 / 止損 / RR</h3>
-<label>預計買入價 (RM)</label>
-<input type="number" step="0.001" id="entry">
-
-<button onclick="calcRR()">計算 RR</button>
-<div id="rrOut" class="result"></div>
+<div class="container">
+  <div class="header">
+    <h1><i class="fas fa-brain"></i> 交易训练模式</h1>
+    <div class="mode-badge">正式进入【交易训练模式】</div>
+    <p>KLSE + Moomoo 交易工具 - 遵守纪律，理性交易</p>
+  </div>
+  
+  <!-- 左侧：交易规则和账户结构 -->
+  <div class="rules-container">
+    <div class="card">
+      <h2><i class="fas fa-balance-scale"></i> 三个固定原则</h2>
+      
+      <div class="principle-card principle-1">
+        <div class="principle-header">
+          <div class="principle-number">1</div>
+          <div class="principle-title">先活着，再变快</div>
+        </div>
+        <div class="principle-content">
+          <ul>
+            <li><strong>不追</strong> - 不追高，不追涨</li>
+            <li><strong>不赌</strong> - 不赌财报，不赌消息</li>
+            <li><strong>不因为"看起来会飞"就改变仓位纪律</strong></li>
+          </ul>
+          <div class="quote-box">
+            <i class="fas fa-quote-left"></i> 任何一笔交易，都要在最坏情况下可接受。
+          </div>
+        </div>
+      </div>
+      
+      <div class="principle-card principle-2">
+        <div class="principle-header">
+          <div class="principle-number">2</div>
+          <div class="principle-title">交易是概率，不是对错</div>
+        </div>
+        <div class="principle-content">
+          <p>以后我们不说：</p>
+          <ul>
+            <li>"这只会不会涨？"</li>
+          </ul>
+          <p>我们只说：</p>
+          <ul>
+            <li>这笔交易的 RR 合不合理？</li>
+            <li>错了，我亏多少？</li>
+            <li>对了，我赚多少？</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="principle-card principle-3">
+        <div class="principle-header">
+          <div class="principle-number">3</div>
+          <div class="principle-title">每一笔操作，必须能复盘</div>
+        </div>
+        <div class="principle-content">
+          <p>你做的每一个动作，事后都要能回答：</p>
+          <ul>
+            <li>我为什么进？</li>
+            <li>我为什么没追？</li>
+            <li>我为什么在这里卖？</li>
+            <li>我为什么忍？</li>
+          </ul>
+          <div class="quote-box">
+            <i class="fas fa-quote-left"></i> 不能复盘的交易 = 不合格交易
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card">
+      <h2><i class="fas fa-sitemap"></i> 账户结构</h2>
+      <p>这是非常关键的一步。我们已经冻结角色，只允许情绪发生在 Tactical 层。</p>
+      
+      <div class="account-structure">
+        <div class="account-type">
+          <h4><i class="fas fa-shield-alt"></i> Core（本仓｜不用于交易）</h4>
+          <p><strong>规则：</strong>这些不是"赚钱工具"，是稳定器。除非逻辑改变，否则不动、不拿来炒、不当情绪出口。</p>
+        </div>
+        
+        <div class="account-type">
+          <h4><i class="fas fa-chess-knight"></i> Tactical（可交易仓）</h4>
+          <p><strong>规则：</strong>以后所有情绪，只允许发生在这一层。</p>
+          <ul>
+            <li>VELESTO（管理中）</li>
+            <li>5k 中短线资金（待部署）</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 右侧：交易工具和征兆 -->
+  <div class="tools-container">
+    <div class="card">
+      <h2><i class="fas fa-chart-line"></i> 交易工具</h2>
+      
+      <div class="toggle-container" id="feeToggle">
+        <div class="toggle-btn active" data-mode="normal">普通马股</div>
+        <div class="toggle-btn" data-mode="moomoo_my">moomoo 马股</div>
+        <div class="toggle-btn" data-mode="moomoo_us">moomoo 美股</div>
+      </div>
+      
+      <div class="section-title">
+        <h3>手续费计算</h3>
+        <span class="tooltip">
+          <i class="fas fa-info-circle" style="color: var(--accent);"></i>
+          <span class="tooltip-text">根据选择的交易模式计算交易成本，包括佣金、清算费和印花税</span>
+        </span>
+      </div>
+      
+      <div class="form-row">
+        <label for="price">股价 <span id="currencyLabel">(RM)</span></label>
+        <div class="input-group">
+          <input type="number" step="0.001" id="price" placeholder="例如：1.25">
+          <span class="currency" id="priceCurrency">RM</span>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <label for="qty">股数</label>
+        <div class="input-group">
+          <input type="number" id="qty" placeholder="例如：1000">
+        </div>
+      </div>
+      
+      <div class="note" id="usdNote" style="display: none;">
+        * 美股交易以美元(USD)计算，汇率约为 1 USD = 4.70 MYR (仅供参考)
+      </div>
+      
+      <button class="btn" onclick="calcFee()">
+        <i class="fas fa-calculator"></i> 计算手续费
+      </button>
+      
+      <div id="feeOut" class="result-box" style="display: none;">
+        <div class="result-title"><i class="fas fa-file-invoice-dollar"></i> 手续费计算结果</div>
+        <div id="feeContent"></div>
+      </div>
+      
+      <div class="section-title" style="margin-top: 30px;">
+        <h3>换手率分析</h3>
+        <span class="tooltip">
+          <i class="fas fa-info-circle" style="color: var(--accent);"></i>
+          <span class="tooltip-text">换手率 = (成交量 / 总股本) × 100%。用于衡量股票流动性</span>
+        </span>
+      </div>
+      
+      <div class="form-row">
+        <label for="vol">成交量 <span class="tooltip"><i class="fas fa-question-circle"></i><span class="tooltip-text">可输入数字或带单位(如：1.5M, 10K, 500)</span></span></label>
+        <div class="input-group">
+          <input type="text" id="vol" placeholder="例如：1.5M 或 1500000">
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <label for="shares">股本数 <span class="tooltip"><i class="fas fa-question-circle"></i><span class="tooltip-text">可输入数字或带单位(如：10.79B, 5.8B)</span></label>
+        <div class="input-group">
+          <input type="text" id="shares" placeholder="例如：10.79B 或 10790000000">
+        </div>
+      </div>
+      
+      <button class="btn" onclick="calcTurn()">
+        <i class="fas fa-percentage"></i> 计算换手率
+      </button>
+      
+      <div id="turnOut" class="result-box" style="display: none;">
+        <div class="result-title"><i class="fas fa-chart-bar"></i> 换手率分析</div>
+        <div id="turnContent"></div>
+      </div>
+    </div>
+    
+    <div class="card">
+      <h2><i class="fas fa-exclamation-triangle"></i> 卖出征兆与 RR 判断</h2>
+      
+      <div class="sign-card">
+        <div class="sign-header">
+          <div class="sign-number">1</div>
+          <div class="sign-title">动能衰竭 (涨得很顺但涨幅变小)</div>
+        </div>
+        <div class="sign-content">
+          <ul>
+            <li>之前单日可上涨 5~8%</li>
+            <li>现在连续多日只上涨 1~2%</li>
+            <li>上影线开始增加</li>
+            <li><strong>含义：</strong>价格仍在涨，但追价的人变少</li>
+            <li><strong>行动：</strong>开始准备分批卖出</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="sign-card">
+        <div class="sign-header">
+          <div class="sign-number">2</div>
+          <div class="sign-title">量价背离</div>
+        </div>
+        <div class="sign-content">
+          <ul>
+            <li>成交量创新高，但价格没有创新高</li>
+            <li>代表大量换手，资金开始派发</li>
+            <li><strong>行动：</strong>专业资金可能正在退出</li>
+            <li><strong>建议：</strong>开始保护利润</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="sign-card">
+        <div class="sign-header">
+          <div class="sign-number">3</div>
+          <div class="sign-title">利多钝化</div>
+        </div>
+        <div class="sign-content">
+          <ul>
+            <li>新闻与群组消息极度乐观</li>
+            <li>但价格不再快速上涨或拉高后立刻被压回</li>
+            <li>代表行情可能进入末段</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="rr-optimization">
+        <h4><i class="fas fa-robot"></i> 海油优化R&R 核心原则</h4>
+        <p><strong>RR 已不划算时应退出</strong></p>
+        <p><strong>例子：</strong>上方空间只剩 +5%，下方回吐可能 -10%</p>
+        <p><strong>RR = 0.5 : 1 (不值得继续持有)</strong></p>
+        <div class="quote-box">
+          <i class="fas fa-quote-left"></i> 卖出不是因为一定会跌，而是持有已不划算
+        </div>
+      </div>
+      
+      <div class="section-title" style="margin-top: 30px;">
+        <h3>止盈 / 止损 / 风险回报比</h3>
+        <span class="tooltip">
+          <i class="fas fa-info-circle" style="color: var(--accent);"></i>
+          <span class="tooltip-text">基于买入价计算止损价和止盈价，以及对应的风险回报比(RR)</span>
+        </span>
+      </div>
+      
+      <div class="form-row">
+        <label for="entry">预计买入价 (RM)</label>
+        <div class="input-group">
+          <input type="number" step="0.001" id="entry" placeholder="例如：1.00">
+          <span class="currency">RM</span>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <label for="stopLoss">止损幅度 (%)</label>
+        <div class="input-group">
+          <input type="number" step="0.1" id="stopLoss" value="5" min="1" max="20">
+          <span class="currency">%</span>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <label for="takeProfit1">止盈目标 1 (%)</label>
+        <div class="input-group">
+          <input type="number" step="0.1" id="takeProfit1" value="8" min="1" max="50">
+          <span class="currency">%</span>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <label for="takeProfit2">止盈目标 2 (%)</label>
+        <div class="input-group">
+          <input type="number" step="0.1" id="takeProfit2" value="12" min="1" max="50">
+          <span class="currency">%</span>
+        </div>
+      </div>
+      
+      <button class="btn" onclick="calcRR()">
+        <i class="fas fa-balance-scale"></i> 计算风险回报比
+      </button>
+      
+      <div id="rrOut" class="result-box" style="display: none;">
+        <div class="result-title"><i class="fas fa-target"></i> 止盈止损目标</div>
+        <div id="rrContent"></div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="footer">
+    <p><i class="fas fa-exclamation-circle"></i> 免责声明：此工具提供计算结果仅供参考，实际交易成本可能因券商政策而异。投资有风险，请谨慎决策。遵守交易纪律，保持理性。</p>
+    <p style="margin-top: 10px;">© 2023 交易训练模式 | 版本 3.0</p>
+  </div>
+</div>
 
 <script>
-function parseNum(v){
-    if(!v) return NaN;
-    v = v.toString().trim().toUpperCase().replace(/,/g,"");
-    let num = parseFloat(v);
-    if(isNaN(num)) return NaN;
-    if(v.endsWith("B")) return num * 1e9;
-    if(v.endsWith("M")) return num * 1e6;
-    if(v.endsWith("K")) return num * 1e3;
-    return num;
+// 解析带单位的数字
+function parseNum(v) {
+  if (!v) return NaN;
+  v = v.toString().trim().toUpperCase().replace(/,/g, "");
+  let n = parseFloat(v);
+  if (isNaN(n)) return NaN;
+  if (v.endsWith("B")) return n * 1e9;
+  if (v.endsWith("M")) return n * 1e6;
+  if (v.endsWith("K")) return n * 1e3;
+  return n;
 }
 
-function formatNum(n){return n.toLocaleString('en-US');}
-
-function fee(a){
-    let p=a>=3000?a*0.0042:12,
-        c=a*0.0003,
-        s=Math.ceil(a/1000)*1;
-    return p+c+s;
+// 格式化数字
+function formatNum(n) {
+  if (n >= 1e9) return (n / 1e9).toFixed(2) + "B";
+  if (n >= 1e6) return (n / 1e6).toFixed(2) + "M";
+  if (n >= 1e3) return (n / 1e3).toFixed(2) + "K";
+  return n.toLocaleString('en-US', { maximumFractionDigits: 2 });
 }
 
-function calcFee(){
-    let price=parseFloat(document.getElementById("price").value);
-    let qty=parseInt(document.getElementById("qty").value);
-    if(!price||!qty)return;
-    let amt=price*qty;
-    let total=fee(amt);
-    document.getElementById("feeOut").innerText=
-`成交額: RM ${amt.toFixed(2)}
-手續費總額: RM ${total.toFixed(2)}`;
+// 手续费计算函数
+function feeNormal(a) {
+  let p = a >= 3000 ? a * 0.0042 : 12;
+  let c = a * 0.0003;
+  let s = Math.ceil(a / 1000) * 1;
+  return { p, c, s, total: p + c + s };
 }
 
-function calcTurn(){
-    let v=parseNum(document.getElementById("vol").value);
-    let s=parseNum(document.getElementById("shares").value);
-    if(!v||!s)return;
-
-    let sharesVol = v * 100;
-    let t = (sharesVol/s*100);
-
-    let display = t >= 1 ? t.toFixed(2) + "%" :
-                  t >= 0.1 ? t.toFixed(3) + "%" :
-                  t >= 0.01 ? t.toFixed(4) + "%" :
-                  t >= 0.001 ? t.toFixed(5) + "%" :
-                  t.toFixed(6) + "%";
-
-    document.getElementById("turnOut").innerText =
-`成交量(lot): ${formatNum(v)}
-成交量(股): ${formatNum(sharesVol)}
-股本數: ${formatNum(s)}
-換手率: ${display}`;
+function feeMoomooMY(a) {
+  let commission = Math.max(a * 0.0003, 3);
+  let clearing = Math.min(a * 0.0003, 1000);
+  let stamp = Math.min(Math.ceil(a / 1000) * 1, 200);
+  return { p: commission, c: clearing, s: stamp, total: commission + clearing + stamp };
 }
 
-function calcRR(){
-    let e=parseFloat(document.getElementById("entry").value);
-    if(!e)return;
-    let sl=e*0.95,tp1=e*1.08,tp2=e*1.12;
-    let risk=0.05,rew1=0.08,rew2=0.12;
-    document.getElementById("rrOut").innerText=
-`止損價(5%): RM ${sl.toFixed(4)}
-止盈8%: RM ${tp1.toFixed(4)} (RR=${(rew1/risk).toFixed(2)})
-止盈12%: RM ${tp2.toFixed(4)} (RR=${(rew2/risk).toFixed(2)})`;
+function feeMoomooUS(a) {
+  // a is USD amount
+  let commission = Math.max(a * 0.0003, 0.99);
+  let platform = 0.99;
+  return { p: commission, c: platform, s: 0, total: commission + platform };
 }
+
+// 切换交易模式
+document.querySelectorAll('.toggle-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    
+    const mode = this.getAttribute('data-mode');
+    document.getElementById('feeMode').value = mode;
+    
+    // 更新货币标签
+    const currencyLabel = document.getElementById('currencyLabel');
+    const priceCurrency = document.getElementById('priceCurrency');
+    const usdNote = document.getElementById('usdNote');
+    
+    if (mode === 'moomoo_us') {
+      currencyLabel.textContent = '(USD)';
+      priceCurrency.textContent = 'USD';
+      usdNote.style.display = 'block';
+    } else {
+      currencyLabel.textContent = '(RM)';
+      priceCurrency.textContent = 'RM';
+      usdNote.style.display = 'none';
+    }
+    
+    // 清空结果
+    document.getElementById('feeOut').style.display = 'none';
+  });
+});
+
+// 添加隐藏的select元素用于模式存储
+const feeModeSelect = document.createElement('select');
+feeModeSelect.id = 'feeMode';
+feeModeSelect.style.display = 'none';
+feeModeSelect.innerHTML = `
+  <option value="normal">普通马股</option>
+  <option value="moomoo_my">moomoo 马股</option>
+  <option value="moomoo_us">moomoo 美股（USD）</option>
+`;
+document.body.appendChild(feeModeSelect);
+
+// 计算手续费
+function calcFee() {
+  let price = parseFloat(document.getElementById('price').value);
+  let qty = parseInt(document.getElementById('qty').value);
+  let mode = document.getElementById('feeMode').value;
+  
+  if (!price || !qty) {
+    alert('请输入股价和股数');
+    return;
+  }
+  
+  let amt = price * qty;
+  let f;
+  let currency = mode === 'moomoo_us' ? 'USD' : 'RM';
+  
+  if (mode === 'normal') f = feeNormal(amt);
+  if (mode === 'moomoo_my') f = feeMoomooMY(amt);
+  if (mode === 'moomoo_us') f = feeMoomooUS(amt);
+  
+  let content = '';
+  
+  if (mode === 'moomoo_us') {
+    content += `
+      <div class="result-line"><span>成交金额:</span> <span class="highlight">$${amt.toFixed(2)}</span></div>
+      <div class="result-line"><span>佣金:</span> <span>$${f.p.toFixed(2)}</span></div>
+      <div class="result-line"><span>平台费:</span> <span>$${f.c.toFixed(2)}</span></div>
+      <div class="result-line"><span>总费用:</span> <span class="highlight">$${f.total.toFixed(2)}</span></div>
+      <div class="result-line"><span>费用占比:</span> <span>${((f.total/amt)*100).toFixed(2)}%</span></div>
+    `;
+  } else {
+    content += `
+      <div class="result-line"><span>成交金额:</span> <span class="highlight">RM ${amt.toFixed(2)}</span></div>
+      <div class="result-line"><span>佣金:</span> <span>RM ${f.p.toFixed(2)}</span></div>
+      <div class="result-line"><span>清算费:</span> <span>RM ${f.c.toFixed(2)}</span></div>
+      <div class="result-line"><span>印花税:</span> <span>RM ${f.s.toFixed(2)}</span></div>
+      <div class="result-line"><span>总费用:</span> <span class="highlight">RM ${f.total.toFixed(2)}</span></div>
+      <div class="result-line"><span>费用占比:</span> <span>${((f.total/amt)*100).toFixed(2)}%</span></div>
+    `;
+  }
+  
+  document.getElementById('feeContent').innerHTML = content;
+  document.getElementById('feeOut').style.display = 'block';
+}
+
+// 计算换手率
+function calcTurn() {
+  let v = parseNum(document.getElementById('vol').value);
+  let s = parseNum(document.getElementById('shares').value);
+  
+  if (!v || !s) {
+    alert('请输入成交量和股本数');
+    return;
+  }
+  
+  let sharesVol = v * 100;
+  let t = (sharesVol / s * 100);
+  
+  let display = t >= 1 ? t.toFixed(2) + "%" :
+                t >= 0.1 ? t.toFixed(3) + "%" :
+                t >= 0.01 ? t.toFixed(4) + "%" :
+                t >= 0.001 ? t.toFixed(5) + "%" :
+                t.toFixed(6) + "%";
+  
+  let heat = "";
+  let badgeClass = "";
+  
+  if (t < 0.1) {
+    heat = "很冷 (<0.3%)";
+    badgeClass = "badge-cold";
+  } else if (t < 0.5) {
+    heat = "正常 (0.3% - 0.8%)";
+    badgeClass = "badge-normal";
+  } else if (t < 1) {
+    heat = "偏热 (0.8% - 1.5%)";
+    badgeClass = "badge-warm";
+  } else if (t < 3) {
+    heat = "很热 (1.5% - 3%)";
+    badgeClass = "badge-hot";
+  } else {
+    heat = "非常火 (>3%)";
+    badgeClass = "badge-very-hot";
+  }
+  
+  let content = `
+    <div class="result-line"><span>成交量(lot):</span> <span>${formatNum(v)}</span></div>
+    <div class="result-line"><span>成交量(股):</span> <span>${formatNum(sharesVol)}</span></div>
+    <div class="result-line"><span>股本数:</span> <span>${formatNum(s)}</span></div>
+    <div class="result-line"><span>换手率:</span> <span class="highlight">${display}</span></div>
+    <div class="result-line"><span>活跃度:</span> <span><span class="badge ${badgeClass}">${heat}</span></span></div>
+  `;
+  
+  document.getElementById('turnContent').innerHTML = content;
+  document.getElementById('turnOut').style.display = 'block';
+}
+
+// 计算风险回报比
+function calcRR() {
+  let e = parseFloat(document.getElementById('entry').value);
+  let slPercent = parseFloat(document.getElementById('stopLoss').value);
+  let tp1Percent = parseFloat(document.getElementById('takeProfit1').value);
+  let tp2Percent = parseFloat(document.getElementById('takeProfit2').value);
+  
+  if (!e) {
+    alert('请输入预计买入价');
+    return;
+  }
+  
+  let sl = e * (1 - slPercent/100);
+  let tp1 = e * (1 + tp1Percent/100);
+  let tp2 = e * (1 + tp2Percent/100);
+  let risk = slPercent/100;
+  let rew1 = tp1Percent/100;
+  let rew2 = tp2Percent/100;
+  
+  let rr1 = rew1/risk;
+  let rr2 = rew2/risk;
+  
+  // 创建可视化RR图表
+  let rrVisual = '';
+  if (rr1 > 0 && rr2 > 0) {
+    const riskWidth = 30; // 风险部分宽度百分比
+    const reward1Width = Math.min(rr1 * 30, 70);
+    const reward2Width = Math.min(rr2 * 30, 70);
+    
+    rrVisual = `
+      <div class="rr-visual">
+        <div class="rr-visual-label risk">风险 ${slPercent}%</div>
+        <div class="rr-visual-label reward">回报 ${tp1Percent}% / ${tp2Percent}%</div>
+        <div class="rr-visual-bar rr-visual-risk" style="width: ${riskWidth}%"></div>
+        <div class="rr-visual-bar rr-visual-reward" style="width: ${reward1Width}%"></div>
+      </div>
+    `;
+  }
+  
+  let content = `
+    <div class="result-line"><span>买入价:</span> <span class="highlight">RM ${e.toFixed(4)}</span></div>
+    <div class="result-line"><span>止损价(${slPercent}%):</span> <span style="color: var(--danger);">RM ${sl.toFixed(4)}</span></div>
+    <div class="result-line"><span>止盈价(${tp1Percent}%):</span> <span style="color: var(--success);">RM ${tp1.toFixed(4)}</span></div>
+    <div class="result-line"><span>风险回报比(${tp1Percent}%):</span> <span class="${rr1 >= 1.5 ? 'highlight' : ''}">${rr1.toFixed(2)} : 1 ${rr1 >= 1.5 ? '✓' : rr1 >= 1 ? '~' : '✗'}</span></div>
+    <div class="result-line"><span>止盈价(${tp2Percent}%):</span> <span style="color: var(--success);">RM ${tp2.toFixed(4)}</span></div>
+    <div class="result-line"><span>风险回报比(${tp2Percent}%):</span> <span class="${rr2 >= 1.5 ? 'highlight' : ''}">${rr2.toFixed(2)} : 1 ${rr2 >= 1.5 ? '✓' : rr2 >= 1 ? '~' : '✗'}</span></div>
+    ${rrVisual}
+    <div style="margin-top: 15px; font-size: 0.9rem; color: ${rr1 >= 1.5 ? 'var(--success)' : rr1 >= 1 ? 'var(--warning)' : 'var(--danger)'}">
+      ${rr1 >= 1.5 ? '✓ RR 良好，交易值得考虑' : rr1 >= 1 ? '~ RR 一般，需谨慎评估' : '✗ RR 不佳，建议放弃此交易'}
+    </div>
+  `;
+  
+  document.getElementById('rrContent').innerHTML = content;
+  document.getElementById('rrOut').style.display = 'block';
+}
+
+// 页面加载完成后初始化
+document.addEventListener('DOMContentLoaded', function() {
+  // 设置示例数据
+  document.getElementById('price').value = 1.25;
+  document.getElementById('qty').value = 1000;
+  document.getElementById('vol').value = '1.5M';
+  document.getElementById('shares').value = '10.79B';
+  document.getElementById('entry').value = 1.00;
+  document.getElementById('stopLoss').value = 5;
+  document.getElementById('takeProfit1').value = 8;
+  document.getElementById('takeProfit2').value = 12;
+  
+  // 为输入框添加回车键支持
+  document.querySelectorAll('input').forEach(input => {
+    input.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        const card = this.closest('.card');
+        const button = card.querySelector('.btn');
+        if (button) button.click();
+      }
+    });
+  });
+  
+  // 添加动画效果
+  const cards = document.querySelectorAll('.card');
+  cards.forEach((card, index) => {
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(20px)';
+    
+    setTimeout(() => {
+      card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+      card.style.opacity = '1';
+      card.style.transform = 'translateY(0)';
+    }, index * 100);
+  });
+});
 </script>
 </body>
 </html>
